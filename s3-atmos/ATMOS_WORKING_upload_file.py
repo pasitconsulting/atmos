@@ -1,25 +1,26 @@
 #!/usr/bin/python 
 
-#import sys
-import boto.s3
-import boto.s3.connection
-
-# read S3 bucket auth info from conf file
 import ConfigParser
-creds = ConfigParser.ConfigParser()
-creds.read("/root/s3_api/.aws/credentials")
-
-config = ConfigParser.ConfigParser()
-config.read("/root/s3_api/.aws/config")
+import boto.s3.connection
 
 provider = 'skyscape'
 
+
+# read S3 bucket auth info from .aws/credentials
+creds = ConfigParser.ConfigParser()
+creds.read("/root/s3_api/.aws/credentials")
+
+# read S3 bucket auth info from .aws/config
+config = ConfigParser.ConfigParser()
+config.read("/root/s3_api/.aws/config")
+
+#read from .aws/credentials
 aws_access_key_id = creds.get( (provider), "aws_access_key_id")
 aws_secret_access_key = creds.get( str(provider), "aws_secret_access_key")
+bucket = creds.get( str(provider), "bucket")
+
+#read from .aws/config
 host = config.get( str(provider), "host")
-
-
-bucket='test-testy-test-test'
 
 
 conn = boto.connect_s3(
@@ -38,7 +39,7 @@ conn = boto.connect_s3(
 
 from boto.s3.key import Key
 
-b = conn.get_bucket( 'test-testy-test-test' )
+b = conn.get_bucket(bucket)
 k = Key(b)
 k.key = 'ruby.rb'
 k.set_contents_from_filename('/root/s3_api/ruby.rb')
