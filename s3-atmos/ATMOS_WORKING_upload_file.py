@@ -3,24 +3,27 @@
 import ConfigParser
 import boto.s3.connection
 
-provider = 'skyscape'
-
+v_provider = 'skyscape'
+v_credsfile = '/root/s3_api/.aws/credentials'
+v_conffile = '/root/s3_api/.aws/config'
+v_host = 'cas00003.skyscapecloud.com'
+v_port = '8443'
 
 # read S3 bucket auth info from .aws/credentials
 creds = ConfigParser.ConfigParser()
-creds.read("/root/s3_api/.aws/credentials")
+creds.read(v_credsfile)
 
 # read S3 bucket auth info from .aws/config
 config = ConfigParser.ConfigParser()
-config.read("/root/s3_api/.aws/config")
+config.read(v_conffile)
 
 #read from .aws/credentials
-aws_access_key_id = creds.get( (provider), "aws_access_key_id")
-aws_secret_access_key = creds.get( str(provider), "aws_secret_access_key")
-bucket = creds.get( str(provider), "bucket")
+aws_access_key_id = creds.get( (v_provider), "aws_access_key_id")
+aws_secret_access_key = creds.get( str(v_provider), "aws_secret_access_key")
+bucket = creds.get( str(v_provider), "bucket")
 
 #read from .aws/config
-host = config.get( str(provider), "host")
+host = config.get( str(v_provider), "host")
 
 
 conn = boto.connect_s3(
@@ -29,9 +32,9 @@ conn = boto.connect_s3(
 
         aws_secret_access_key = (aws_secret_access_key),
 
-        host = 'cas00003.skyscapecloud.com',
+        host = (v_host),
 
-        port = 8443,
+        port = int(v_port),
 
         calling_format = boto.s3.connection.OrdinaryCallingFormat(),
 
