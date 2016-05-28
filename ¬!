@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+
+__author__ = "Paul Senior"
+__copyright__ = "Copyright 2016, The Horizon Project"
+__credits__ = [ ""]
+__license__ = "GPL"
+__version__ = "0.0.1"
+__maintainer__ = "Paul Senior"
+__email__ = "pasitconsulting@outlook.com"
+__status__ = "development"
+
+provider = "skyscape"
+
+# read S3 bucket auth info from conf file
+import ConfigParser
+creds = ConfigParser.ConfigParser()
+creds.read("/root/s3_api/.aws/credentials")
+
+config = ConfigParser.ConfigParser()
+config.read("/root/s3_api/.aws/config")
+
+print str(provider)
+
+aws_access_key_id = creds.get( str(provider), "aws_access_key_id")
+aws_secret_access_key = creds.get( str(provider), "aws_secret_access_key")
+region = config.get( str(provider), "region")
+
+print "aws_access_key_id:" + str(aws_access_key_id)
+print "aws_secret_access_key:" + str(aws_secret_access_key)
+print "region:" + str(region)
+
+#authenticate
+import boto3
+import botocore
+
+
+#DEFINE S3 RESOURCE
+s3 = boto3.resource('s3')
+
+bucket_name = "stuff"
+
+print("Creating new bucket with name:" + str(bucket_name)  )
+bucket = s3.create_bucket(bucket_name)
